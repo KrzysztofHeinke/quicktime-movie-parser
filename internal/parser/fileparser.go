@@ -70,28 +70,28 @@ func ReadData(f *os.File, cursorPosition int64, sizeToRead uint32) ([]byte, erro
 func ReadFileMetadata(filename string) ([]byte, error) {
 	file, err := os.Open(filename)
 	if err != nil {
-		logrus.Errorf("Error opening file:", err)
+		logrus.Errorf("Error opening file: %v", err)
 		return nil, err
 	}
 	defer file.Close()
 
 	position, err := FindAtomInFile(file, []byte("moov"))
 	if err != nil {
-		logrus.Errorf("Error finding moov atom:", err)
+		logrus.Errorf("Error finding moov atom: %v", err)
 		return nil, err
 	}
 
 	// Go to the start of the "moov" atom minus header and moov size
 	_, err = file.Seek(position-7, io.SeekStart)
 	if err != nil {
-		logrus.Errorf("Error seeking to moov atom:", err)
+		logrus.Errorf("Error seeking to moov atom: %v", err)
 		return nil, err
 	}
 
 	moovSizeData := make([]byte, 4)
 	_, err = file.Read(moovSizeData)
 	if err != nil {
-		logrus.Errorf("Error reading moov size:", err)
+		logrus.Errorf("Error reading moov size: %v", err)
 		return nil, err
 	}
 	size := binary.BigEndian.Uint32(moovSizeData)
@@ -99,7 +99,7 @@ func ReadFileMetadata(filename string) ([]byte, error) {
 	// Read the entire "moov" atom (including its header)
 	atomData, err := ReadData(file, position-7, size)
 	if err != nil {
-		logrus.Errorf("Error reading moov atom data:", err)
+		logrus.Errorf("Error reading moov atom data: %v", err)
 		return nil, err
 	}
 
@@ -111,9 +111,9 @@ func SearchAtoms(data []byte, searchBytes []byte) (int, error) {
 	index := bytes.Index(data, searchBytes)
 
 	if index != -1 {
-		fmt.Printf("Found '%s' at position: %d\n", searchBytes, index)
+		logrus.Infof("Found '%s' at position: %d\n", searchBytes, index)
 	} else {
-		fmt.Printf("'%s' not found", searchBytes)
+		logrus.Infof("'%s' not found", searchBytes)
 		return -1, fmt.Errorf("%s not found", searchBytes)
 	}
 	return index, nil
