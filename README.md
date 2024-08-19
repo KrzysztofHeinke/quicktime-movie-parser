@@ -13,12 +13,12 @@ The **QuickTime Movie Parser** is a powerful command-line tool designed for pars
 ### Prerequisites
 
 - [Go](https://golang.org/doc/install) 1.16 or later
-- [Docker] (https://docs.docker.com/engine/install/)
+- [Docker](https://docs.docker.com/engine/install/)
 
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/quicktime-movie-parser.git
+git clone https://github.com/KrzysztofHeinke/quicktime-movie-parser.git
 cd quicktime-movie-parser
 ```
 
