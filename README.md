@@ -56,8 +56,14 @@ make lint-docker
 
 ### Usage
 
+Windows
 ```bash
-./bin/quicktime-movie-parser parse example.mov
+./bin/windows/quicktime-movie-parser.exe parse ./testdata/sample_1280x720_surfing_with_audio.mov
+```
+
+Linux
+```bash
+./bin/linux/quicktime-movie-parser parse ./testdata/sample_1280x720_surfing_with_audio.mov
 ```
 
 This command parses the moov atom in the provided example.mov file and prints out the extracted metadata, such as track information, sample rates, and video dimensions.
@@ -72,7 +78,7 @@ Windows
 
 Linux
 ```bash
-./bin/windows/quicktime-movie-parser --loglevel=debug parse ./testdata/sample_1280x720_surfing_with_audio.mov
+./bin/linux/quicktime-movie-parser --loglevel=debug parse ./testdata/sample_1280x720_surfing_with_audio.mov
 ```
 
 ### License
