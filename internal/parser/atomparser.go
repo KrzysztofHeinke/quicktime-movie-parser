@@ -191,8 +191,8 @@ func CollectTrackInfo(root atoms.AtomIf) {
 					case *atoms.LeafAtom:
 						if atom.AtomHeader.GetType() == "tkhd" {
 							a := atom.Data.(*atoms.TkhdAtom)
-							width = FixedPointToFloat32(a.Width)
-							height = FixedPointToFloat32(a.Height)
+							width = fixedPointToFloat32(a.Width)
+							height = fixedPointToFloat32(a.Height)
 							isVideoTrack = true
 						}
 						if atom.AtomHeader.GetType() == "stsd" {
@@ -200,7 +200,7 @@ func CollectTrackInfo(root atoms.AtomIf) {
 							sampleRates, _ := atoms.GetSampleRates(a)
 							for codec, rates := range sampleRates {
 								for _, rate := range rates {
-									logrus.Infof("Codec: %s, Sample Rate: %.2f Hz\n", codec, FixedPointToFloat32(uint32(rate)))
+									logrus.Infof("Codec: %s, Sample Rate: %.2f Hz\n", codec, fixedPointToFloat32(uint32(rate)))
 								}
 							}
 						}
@@ -215,7 +215,7 @@ func CollectTrackInfo(root atoms.AtomIf) {
 	}
 }
 
-// FixedPointToFloat32 converts a fixed-point Q16.16 value to a floating-point number
-func FixedPointToFloat32(value uint32) float64 {
+// fixedPointToFloat32 converts a fixed-point Q16.16 value to a floating-point number
+func fixedPointToFloat32(value uint32) float64 {
 	return float64(value) / (1 << 16)
 }

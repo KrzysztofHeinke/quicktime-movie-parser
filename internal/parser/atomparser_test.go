@@ -47,8 +47,8 @@ func TestFixedPointToFloat32(t *testing.T) {
 	width := uint32(0x00020000)  // 2.0 in Q16.16
 	height := uint32(0x00030000) // 3.0 in Q16.16
 
-	assert.Equal(t, 2.0, FixedPointToFloat32(width), "Expected width to be 2.0")
-	assert.Equal(t, 3.0, FixedPointToFloat32(height), "Expected height to be 3.0")
+	assert.Equal(t, 2.0, fixedPointToFloat32(width), "Expected width to be 2.0")
+	assert.Equal(t, 3.0, fixedPointToFloat32(height), "Expected height to be 3.0")
 }
 
 // TestCreateTreeOfAtoms tests the CreateTreeOfAtoms function.
@@ -61,7 +61,7 @@ func TestCreateTreeOfAtoms(t *testing.T) {
 
 // TestCollectTrackInfo tests the CollectTrackInfo function.
 func TestCollectTrackInfo(t *testing.T) {
-	// Prepare a mock atom structure
+
 	tkhdAtom := &atoms.LeafAtom{
 		AtomHeader: atoms.AtomHeader{Size: 92, Type: [4]byte{'t', 'k', 'h', 'd'}},
 		Data:       &atoms.TkhdAtom{Width: 0x00020000, Height: 0x00030000},
@@ -73,13 +73,11 @@ func TestCollectTrackInfo(t *testing.T) {
 	root := &atoms.CompositeAtom{}
 	root.AddChild(compositeAtom)
 
-	// Call CollectTrackInfo
 	CollectTrackInfo(root)
 }
 
 // TestCleanEmptyHeaders tests the CleanEmptyHeaders function.
 func TestCleanEmptyHeaders(t *testing.T) {
-	// Prepare a mock atom structure
 	emptyCompositeAtom := &atoms.CompositeAtom{
 		AtomHeader: atoms.AtomHeader{},
 	}
@@ -90,7 +88,6 @@ func TestCleanEmptyHeaders(t *testing.T) {
 	root := &atoms.CompositeAtom{}
 	root.AddChild(emptyCompositeAtom)
 
-	// Call CleanEmptyHeaders
 	cleanedRoot := CleanEmptyHeaders(root)
 	assert.Equal(t, 1, len(cleanedRoot.(*atoms.CompositeAtom).GetChildren()), "Expected 1 child after cleaning")
 	assert.Equal(t, childAtom, cleanedRoot.(*atoms.CompositeAtom).GetChildren()[0], "Expected the child to be preserved")
