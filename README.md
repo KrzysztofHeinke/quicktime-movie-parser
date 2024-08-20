@@ -65,8 +65,14 @@ This command parses the moov atom in the provided example.mov file and prints ou
 By default loggin is set to INFO. 
 If you would like to take a look on DEBUG messages
 
+Windows
 ```bash
-./bin/quicktime-movie-parser --loglevel=debug parse example.mov
+./bin/windows/quicktime-movie-parser.exe --loglevel=debug parse ./testdata/sample_1280x720_surfing_with_audio.mov
+```
+
+Linux
+```bash
+./bin/windows/quicktime-movie-parser --loglevel=debug parse ./testdata/sample_1280x720_surfing_with_audio.mov
 ```
 
 ### License
