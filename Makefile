@@ -2,31 +2,61 @@ BINARY_NAME=quicktime-movie-parser
 DOCKER_IMAGE=quicktime-movie-parser-builder
 CONTAINER_NAME=quicktime-movie-parser-container
 OUTPUT_DIR=bin
+BUILD_WINDOWS=$(OUTPUT_DIR)/windows
+BUILD_LINUX=$(OUTPUT_DIR)/linux
 
 .PHONY: build
-build: clean
-	mkdir -p $(OUTPUT_DIR)
+build: clean build-linux build-windows
+
+.PHONY: build-linux
+build-linux: clean
+	mkdir -p $(BUILD_LINUX)
 	@echo "Building the Go application in Docker..."
 
 	# Check if the container exists and remove it if it does
 	@docker rm -f $(CONTAINER_NAME) 2>/dev/null || true
 
 	# Build the Docker image
-	@docker build --target builder -t $(DOCKER_IMAGE) .
+	@docker build --build-arg GOOS=linux --build-arg GOARCH=amd64  --target builder -t $(DOCKER_IMAGE) .
 
 	# Create the container without starting it
 	@docker create --name $(CONTAINER_NAME) $(DOCKER_IMAGE)
 
 	# Copy the binary from the container to the host
-	@docker cp $(CONTAINER_NAME):/app/bin/$(BINARY_NAME) $(OUTPUT_DIR)/$(BINARY_NAME)
+	@docker cp $(CONTAINER_NAME):/app/bin/$(BINARY_NAME) $(BUILD_LINUX)/$(BINARY_NAME)
 
 	# Remove the container
 	@docker rm $(CONTAINER_NAME)
 
 	# Set execute permissions on the binary
-	@chmod +x $(OUTPUT_DIR)/$(BINARY_NAME)
+	@chmod +x $(BUILD_LINUX)/$(BINARY_NAME)
 
-	@echo "Binary copied to $(OUTPUT_DIR)/$(BINARY_NAME) and permissions set."
+	@echo "Binary copied to $(BUILD_LINUX)/$(BINARY_NAME) and permissions set."
+
+.PHONY: build-windows
+build-windows: clean
+	mkdir -p $(BUILD_WINDOWS)
+	@echo "Building the Go application in Docker..."
+
+	# Check if the container exists and remove it if it does
+	@docker rm -f $(CONTAINER_NAME) 2>/dev/null || true
+
+	# Build the Docker image
+	@docker build --build-arg GOOS=windows --build-arg GOARCH=amd64 --target builder -t $(DOCKER_IMAGE) .
+
+	# Create the container without starting it
+	@docker create --name $(CONTAINER_NAME) $(DOCKER_IMAGE)
+
+	# Copy the binary from the container to the host
+	@docker cp $(CONTAINER_NAME):/app/bin/$(BINARY_NAME) $(BUILD_WINDOWS)/$(BINARY_NAME).exe
+
+	# Remove the container
+	@docker rm $(CONTAINER_NAME)
+
+	# Set execute permissions on the binary
+	@chmod +x $(BUILD_WINDOWS)/$(BINARY_NAME).exe
+
+	@echo "Binary copied to $(BUILD_WINDOWS)/$(BINARY_NAME) and permissions set."
 
 .PHONY: clean
 clean:
